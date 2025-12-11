@@ -6,223 +6,286 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Photo Gallery – My Baccha</title>
 
+  <link rel="stylesheet" href="./style.css" />
+
   <style>
-    /* --- RESET & BASE --- */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow-x: hidden; }
+    /* --- PAGE BACKGROUND --- */
     body {
       background: radial-gradient(circle at top, #ffe4f5 0, #ffb3d9 40%, #ff6fa6 90%);
       min-height: 100vh;
+      margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      padding: 20px 12px; /* safe padding for small screens */
     }
 
     .gallery-wrapper {
-      max-width: 980px;
-      margin: 0 auto;
       text-align: center;
       position: relative;
-      padding-top: 18px;
-      padding-bottom: 40px;
+      padding-top: 30px;
+      padding-bottom: 50px;
       width: 100%;
+      overflow-x: hidden; /* Horizontal scroll rokne ke liye */
     }
 
     .welcome-text {
-      font-size: clamp(1.25rem, 4.2vw, 1.9rem);
+      font-size: 1.9rem;
       font-weight: 700;
-      color: #b00040;
+      color: #b00040; /* Thoda dark pink taaki contrast bane */
       margin-bottom: 0.3rem;
       text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
     }
 
     .small-sub {
-      font-size: clamp(.88rem, 2.6vw, .95rem);
-      color: #444;
-      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #444; /* Darker grey for readability */
+      margin-bottom: 1.8rem;
       padding: 0 10px;
     }
 
-    /* --- PHOTO FRAME STYLES (responsive) --- */
+    /* --- PHOTO FRAME STYLES --- */
     .photo-frame {
       position: relative;
-      width: 100%;
-      max-width: 520px; /* larger on desktop, smaller on mobile */
-      margin: 0 auto 22px;
-      padding: 14px;
-      border-radius: 28px;
+      width: min(280px, 75vw);
+      margin: 0 auto 25px auto;
+      padding: 15px;
+      border-radius: 35px;
       background: #fff;
-      overflow: visible; /* Emojis bahar dikhne ke liye */
-      transition: transform 0.18s ease-in-out;
+      overflow: visible !important; /* Emojis bahar dikhne ke liye zaroori */
+      transition: transform 0.2s ease-in-out;
       cursor: pointer;
+      /* Default border removed, handled by themes */
     }
 
-    .photo-frame:active { transform: scale(.98); }
+    .photo-frame:active {
+      transform: scale(0.96);
+    }
 
     .photo-frame img {
       width: 100%;
-      height: auto;
       display: block;
-      border-radius: 18px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      border-radius: 25px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
       position: relative;
-      z-index: 10;
+      z-index: 10; /* Image peeche, emojis aage */
     }
 
-    /* --- CORNER DECORATIONS --- */
+    /* --- CORNER DECORATIONS (FIXED VISIBILITY) --- */
     .corner-decoration {
       position: absolute;
-      width: 46px;
-      height: 46px;
-      background: #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+      width: 50px; /* Thoda bada kiya */
+      height: 50px;
+      background: #ffffff; /* White background taaki emoji saaf dikhe */
+      border-radius: 50%; /* Circle shape */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Shadow for pop effect */
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 1.5rem;
-      z-index: 30;
+      font-size: 1.8rem;
+      z-index: 30; /* Image se upar */
       animation: gentleFloat 3s ease-in-out infinite alternate;
-      border: 2px solid rgba(255,43,123,0.14);
-      pointer-events: none; /* avoid accidental clicks */
+      border: 2px solid rgba(255, 43, 123, 0.2);
     }
 
-    .top-left { top: -18px; left: -18px; transform: rotate(-18deg); }
-    .top-right { top: -18px; right: -18px; transform: rotate(18deg); }
-    .bottom-left { bottom: -18px; left: -18px; transform: rotate(-18deg); }
-    .bottom-right { bottom: -18px; right: -18px; transform: rotate(18deg); }
+    /* Positioning corners */
+    .top-left { top: -20px; left: -20px; transform: rotate(-20deg); animation-delay: 0s;}
+    .top-right { top: -20px; right: -20px; transform: rotate(20deg); animation-delay: 0.5s;}
+    .bottom-left { bottom: -20px; left: -20px; transform: rotate(-20deg); animation-delay: 1s;}
+    .bottom-right { bottom: -20px; right: -20px; transform: rotate(20deg); animation-delay: 1.5s;}
 
     @keyframes gentleFloat {
-      0% { transform: translateY(0) rotate(var(--r,0deg)); }
-      100% { transform: translateY(-6px) rotate(var(--r,0deg)); }
+      0% { transform: translateY(0) rotate(var(--r, 0deg)); }
+      100% { transform: translateY(-6px) rotate(var(--r, 0deg)); }
     }
-    .top-left, .bottom-left { --r: -18deg; }
-    .top-right, .bottom-right { --r: 18deg; }
+    .top-left, .bottom-left { --r: -20deg; }
+    .top-right, .bottom-right { --r: 20deg; }
 
-    /* --- TAP HINT --- */
+
+    /* --- TAP HINT (FIXED VISIBILITY) --- */
     .tap-hint {
       margin-top: 1rem;
-      font-size: clamp(.85rem, 2.6vw, 1rem);
-      color: #d6004f;
-      background: #ffffff;
+      font-size: 1rem;
+      color: #d6004f; /* Dark Magenta text for high contrast */
+      background: #ffffff; /* Pure Solid White */
       display: inline-block;
-      padding: 9px 20px;
-      border-radius: 999px;
+      padding: 10px 25px;
+      border-radius: 50px;
       font-weight: 700;
-      border: 3px solid #ff8fab;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      border: 3px solid #ff8fab; /* Soft pink border */
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Strong shadow to lift off bg */
       animation: popHint 2s infinite;
     }
-    @keyframes popHint { 0%,100%{transform:scale(1)}50%{transform:scale(1.04)} }
 
-    /* --- THEMES (kept but less heavy on outlines for small screens) --- */
-    .theme-1 { background: linear-gradient(135deg,#fff0f5,#ffdbe7); box-shadow: 0 10px 28px rgba(255,80,150,0.14); }
-    .theme-2 { background: radial-gradient(circle at top,#fffaf0,#ffe0b3); box-shadow: 0 10px 28px rgba(255,163,64,0.12); }
-    .theme-3 { background: linear-gradient(135deg,#f0fffc,#c7f7ed); box-shadow: 0 10px 28px rgba(0,180,150,0.1); }
-    .theme-4 { background: radial-gradient(circle,#f8f4ff,#e0d1ff); box-shadow: 0 10px 28px rgba(120,82,255,0.12); }
-    .theme-5 { background: linear-gradient(135deg,#fff5f5,#ffc9c9); box-shadow: 0 10px 28px rgba(255,66,66,0.12); }
-    .theme-6 { background: linear-gradient(135deg,#fffffa,#fff3a1); box-shadow: 0 10px 28px rgba(255,215,0,0.12); }
-    .theme-7 { background: linear-gradient(135deg,#f2fffa,#baffec); box-shadow: 0 10px 28px rgba(55,190,150,0.12); }
+    @keyframes popHint {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* --- THEMES --- */
+    .theme-1 { background: linear-gradient(135deg, #fff0f5, #ffdbe7); box-shadow: 0 0 0 5px #fff, 0 0 0 10px #ff8fab, 0 20px 50px rgba(255, 80, 150, 0.5); }
+    .theme-2 { background: radial-gradient(circle at top, #fffaf0, #ffe0b3); box-shadow: 0 0 0 5px #fff, 0 0 0 10px #ffbb73, 0 20px 50px rgba(255, 163, 64, 0.5); }
+    .theme-3 { background: linear-gradient(135deg, #f0fffc, #c7f7ed); box-shadow: 0 0 0 5px #fff, 0 0 0 10px #55e0c6, 0 20px 50px rgba(0, 180, 150, 0.4); }
+    .theme-4 { background: radial-gradient(circle, #f8f4ff, #e0d1ff); box-shadow: 0 0 0 5px #fff, 0 0 0 10px #2f2e35, 0 20px 50px rgba(120, 82, 255, 0.45); }
+    .theme-5 { background: linear-gradient(135deg, #fff5f5, #ffc9c9); box-shadow: 0 0 0 5px #fff, 0 0 0 10px #ff7a7a, 0 20px 50px rgba(255, 66, 66, 0.5); }
+    .theme-6 { background: linear-gradient(135deg, #fffffa, #fff3a1); box-shadow: 0 0 0 5px #fff, 0 0 0 10px #ffd700, 0 20px 50px rgba(255, 215, 0, 0.5); }
+    .theme-7 { background: linear-gradient(135deg, #f2fffa, #baffec); box-shadow: 0 0 0 5px #fff, 0 0 0 10px #4cedc4, 0 20px 50px rgba(55, 190, 150, 0.5); }
 
     /* --- COMMENT BOX --- */
     .comment-text {
-      margin-top: 14px;
-      font-size: clamp(.95rem, 2.8vw, 1.1rem);
-      color: #222;
-      background: rgba(255,255,255,0.92);
-      padding: 12px;
-      border-radius: 12px;
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      color: #222; /* Dark black/grey */
+      background: rgba(255, 255, 255, 0.85); /* More opaque */
+      padding: 15px;
+      border-radius: 15px;
       display: inline-block;
-      max-width: 88%;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-      line-height: 1.45;
+      max-width: 85%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      line-height: 1.5;
     }
 
-    /* Font utility classes kept (content unchanged) */
-    .font-1 { font-family: "Poppins", sans-serif; font-weight: 600; color: #ff2b7b; }
+    /* Fonts */
+    .font-1 { font-family: "Poppins", sans-serif; font-weight: 600; color: #ff2b7b;}
     .font-2 { font-family: "Courier New", monospace; font-style: italic; color: #d35400; }
-    .font-3 { font-family: "Comic Sans MS", cursive; font-size: 1.05rem; color: #008f7a; }
-    .font-4 { font-family: "Georgia", serif; letter-spacing: .5px; color: #5e337f; }
-    .font-5 { font-family: "Trebuchet MS", sans-serif; text-transform: uppercase; font-size: .9rem; color: #c0392b; }
-    .font-6 { font-family: "Lucida Handwriting", cursive; font-size: 1rem; color: #7f8c8d; }
-    .font-7 { font-family: "Segoe UI", sans-serif; font-weight: 700; font-style: italic; color: #16a085; }
+    .font-3 { font-family: "Comic Sans MS", cursive; font-size: 1.1rem; color: #008f7a;}
+    .font-4 { font-family: "Georgia", serif; letter-spacing: 0.5px; color: #5e337f;}
+    .font-5 { font-family: "Trebuchet MS", sans-serif; text-transform: uppercase; font-size: 0.9rem; color: #c0392b;}
+    .font-6 { font-family: "Lucida Handwriting", cursive; font-size: 1rem; color: #7f8c8d;}
+    .font-7 { font-family: "Segoe UI", sans-serif; font-weight: 700; font-style: italic; color: #16a085;}
 
-    /* --- HEART ORBIT (kept, but smaller on tiny screens) --- */
-    .heart-orbit { position: absolute; inset: 0; pointer-events: none; z-index: 15; }
-    .heart-orbit span { position: absolute; font-size: 1.2rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.18)); animation: heartJump 1.8s ease-in-out infinite; }
-    .heart-orbit span:nth-child(1){ top: 8%; left: 8%; animation-delay: 0s; }
-    .heart-orbit span:nth-child(2){ top: 12%; right: 8%; animation-delay: .28s; }
-    .heart-orbit span:nth-child(3){ bottom: 8%; left: 12%; animation-delay: .56s; }
-    .heart-orbit span:nth-child(4){ bottom: 12%; right: 8%; animation-delay: .84s; }
-    .heart-orbit span:nth-child(5){ top: 44%; left: 50%; transform: translateX(-50%); animation-delay: 1.12s; }
-    @keyframes heartJump { 0%,100%{transform:translateY(0) scale(1);opacity:.75}50%{transform:translateY(-12px) scale(1.25);opacity:1} }
-
-    /* --- NEXT BUTTON WRAP --- */
-    .next-btn-wrap { margin-top: 24px; }
-    .next-btn { background: linear-gradient(45deg,#ff007f,#ff5e99); padding: 12px 28px; border-radius: 50px; color: #fff; text-decoration: none; box-shadow: 0 10px 25px rgba(255,0,120,0.18); font-weight: 800; border: 2px solid rgba(255,255,255,0.6); display: inline-block; }
-
-    /* small device tweaks */
-    @media (max-width: 520px) {
-      .photo-frame { padding: 12px; border-radius: 22px; }
-      .corner-decoration { width: 36px; height: 36px; font-size: 1.2rem; }
-      .comment-text { max-width: 92%; }
+    /* Hearts inside image */
+    .heart-orbit {
+      position: absolute;
+      inset: 0px;
+      pointer-events: none;
+      z-index: 15;
     }
 
-    /* respect reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; }
+    .heart-orbit span {
+      position: absolute;
+      font-size: 1.5rem;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); /* Drop shadow added for visibility */
+      animation: heartJump 1.8s ease-in-out infinite;
+    }
+
+    .heart-orbit span:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+    .heart-orbit span:nth-child(2) { top: 15%; right: 10%; animation-delay: 0.3s; }
+    .heart-orbit span:nth-child(3) { bottom: 10%; left: 15%; animation-delay: 0.6s; }
+    .heart-orbit span:nth-child(4) { bottom: 15%; right: 10%; animation-delay: 0.9s; }
+    .heart-orbit span:nth-child(5) { top: 45%; left: 50%; transform: translateX(-50%); animation-delay: 1.2s; }
+
+    @keyframes heartJump {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
+      50% { transform: translateY(-15px) scale(1.3); opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .welcome-text { font-size: 1.6rem; }
+      .photo-frame { width: min(260px, 80vw); }
+      .corner-decoration { font-size: 1.5rem; width: 40px; height: 40px; }
+      .tap-hint { font-size: 0.9rem; padding: 8px 18px; }
     }
   </style>
 </head>
 
 <body>
-  <main class="gallery-wrapper" id="gallery" role="main">
-    <h1 class="welcome-text">Mera baccha 🫶</h1>
-    <p class="small-sub">Bas click kr or magic dekh 😘❤️</p>
+  <div class="heart-rain" id="heartRain"></div>
 
-    <article class="photo-frame theme-1" id="photoFrame" aria-live="polite" tabindex="0">
-      <div class="corner-decoration top-left" aria-hidden="true">🌸</div>
-      <div class="corner-decoration top-right" aria-hidden="true">🎀</div>
-      <div class="corner-decoration bottom-left" aria-hidden="true">💖</div>
-      <div class="corner-decoration bottom-right" aria-hidden="true">🌸</div>
+  <div class="container">
+    <div class="gallery-wrapper">
+      <h1 class="welcome-text">Mera baccha 🫶</h1>
+      <p class="small-sub">Bas click kr or magic dekh 😘❤️</p>
 
-      <div class="heart-orbit" id="heartOrbit" aria-hidden="true">
-        <span>💖</span><span>💕</span><span>💓</span><span>💘</span><span>💗</span>
+      <div class="photo-frame theme-1" id="photoFrame">
+        <div class="corner-decoration top-left">🌸</div>
+        <div class="corner-decoration top-right">🎀</div>
+        <div class="corner-decoration bottom-left">💖</div>
+        <div class="corner-decoration bottom-right">🌸</div>
+        
+        <div class="heart-orbit" id="heartOrbit">
+          <span>💖</span><span>💕</span><span>💓</span><span>💘</span><span>💗</span>
+        </div>
+
+        <img id="mainPhoto" src="pic1.jpg" alt="Cute memory" />
       </div>
 
-      <img id="mainPhoto" src="pic1.jpg" alt="Cute memory" loading="lazy" />
-    </article>
+      <p class="tap-hint">Photo pe tap karo malkin 😌✨</p>
 
-    <p class="tap-hint" id="tapHint">Photo pe tap karo malkin 😌✨</p>
+      <br>
 
-    <p class="comment-text font-1" id="commentText">
-      Loading your cute memory...
-    </p>
+      <p class="comment-text font-1" id="commentText">
+        Loading your cute memory...
+      </p>
 
-    <div class="next-btn-wrap" id="nextButton" style="display:none">
-      <a class="next-btn" href="letter.html">Aage badhiye malkin 💌</a>
+      <div id="nextButton" style="display:none; margin-top:35px;">
+        <a href="letter.html"
+           style="background: linear-gradient(45deg, #ff007f, #ff5e99); padding:15px 35px; border-radius:50px; color:white; text-decoration:none; box-shadow:0 10px 25px rgba(255,0,120,0.5); font-weight: 800; font-size: 1.1rem; border: 2px solid white;">
+           Aage badhiye malkin 💌
+        </a>
+      </div>
     </div>
-  </main>
+  </div>
 
   <script>
     // *** PHOTOS LIST - APNI PHOTOS KE NAAM YAHAN CHANGE KAR LENA ***
     const slides = [
-      { src: "pic1.jpg", comment: "Meri puri duniya ek frame me aa gayi 💕", font: "font-1", theme: "theme-1", corners: ["🌸","🎀","💖","🌸"] },
-      { src: "pic2.jpg", comment: "Ye wali pic dekh ke sirf ek hi thought aata hai....‘Yaar, ye pgli meri kismat ka sabse pyaara hissa hai’ 🥺✨", font: "font-2", theme: "theme-2", corners: ["🌼","🍯","🧸","🧡"] },
-      { src: "pic3.jpg", comment: "Teri smile literally dil ke sath drama shuru kar deti hai 😏💘", font: "font-3", theme: "theme-3", corners: ["🦋","🍀","✨","🦋"] },
-      { src: "pic4.jpg", comment: "Mujhe pata hai 'tum hi sabse zyada shor machati ho mere dil me' 💓", font: "font-4", theme: "theme-4", corners: ["🦄","☔","💫","🦄"] },
-      { src: "pic5.jpg", comment: "Sach bolu? Agar ‘perfect’ ki dictionary hoti na, usme teri saari photos rakh deta main 😚📖", font: "font-5", theme: "theme-5", corners: ["🌹","💋","🍓","❤️"] },
-      { src: "pic6.jpg", comment: "Itni soft, itni calm vibes… tu naa meri overthinking ka instant ‘off’ button hai 💞", font: "font-6", theme: "theme-6", corners: ["🌻","☀️","🐥","🌟"] },
-      { src: "pic7.jpg", comment: "You'r only and only mine — bas ye feeling aati hai tujhe dekh kar ❤️", font: "font-7", theme: "theme-7", corners: ["🍃","🕊️","💚","🌿"] }
+      {
+        src: "pic1.jpg", // Photo file name
+        comment: "Meri puri duniya ek frame me aa gayi 💕",
+        font: "font-1",
+        theme: "theme-1",
+        corners: ["🌸", "🎀", "💖", "🌸"] // 4 Emojis
+      },
+      {
+        src: "pic2.jpg",
+        comment: "Ye wali pic dekh ke sirf ek hi thought aata hai....‘Yaar, ye pgli meri kismat ka sabse pyaara hissa hai’ 🥺✨",
+        font: "font-2",
+        theme: "theme-2",
+        corners: ["🌼", "🍯", "🧸", "🧡"]
+      },
+      {
+        src: "pic3.jpg",
+        comment: "Teri smile literally dil ke sath drama shuru kar deti hai 😏💘",
+        font: "font-3",
+        theme: "theme-3",
+        corners: ["🦋", "🍀", "✨", "🦋"]
+      },
+      {
+        src: "pic4.jpg",
+        comment: "Mujhe pata hai 'tum hi sabse zyada shor machati ho mere dil me' 💓",
+        font: "font-4",
+        theme: "theme-4",
+        corners: ["🦄", "☔", "💫", "🦄"]
+      },
+      {
+        src: "pic5.jpg",
+        comment: "Sach bolu? Agar ‘perfect’ ki dictionary hoti na, usme teri saari photos rakh deta main 😚📖",
+        font: "font-5",
+        theme: "theme-5",
+        corners: ["🌹", "💋", "🍓", "❤️"]
+      },
+      {
+        src: "pic6.jpg",
+        comment: "Itni soft, itni calm vibes… tu naa meri overthinking ka instant ‘off’ button hai 💞",
+        font: "font-6",
+        theme: "theme-6",
+        corners: ["🌻", "☀️", "🐥", "🌟"]
+      },
+      {
+        src: "pic7.jpg",
+        comment: "You'r only and only mine — bas ye feeling aati hai tujhe dekh kar ❤️",
+        font: "font-7",
+        theme: "theme-7",
+        corners: ["🍃", "🕊️", "💚", "🌿"]
+      }
     ];
 
     const photo = document.getElementById("mainPhoto");
     const commentText = document.getElementById("commentText");
     const photoFrame = document.getElementById("photoFrame");
     const nextButton = document.getElementById("nextButton");
-    const tapHint = document.getElementById("tapHint");
+    const tapHint = document.querySelector(".tap-hint");
 
+    // Corners Select
     const cornerTL = document.querySelector(".corner-decoration.top-left");
     const cornerTR = document.querySelector(".corner-decoration.top-right");
     const cornerBL = document.querySelector(".corner-decoration.bottom-left");
@@ -232,89 +295,54 @@
 
     function renderSlide() {
       const s = slides[current];
-
-      // Update Photo & alt
+      
+      // Update Photo
       photo.src = s.src;
-      photo.alt = s.comment.slice(0, 60) || "Cute memory";
-
-      // Update comment & font
+      
+      // Update Comment
       commentText.textContent = s.comment;
       commentText.className = "comment-text " + s.font;
-
-      // Update theme
+      
+      // Update Theme
       photoFrame.className = "photo-frame " + s.theme;
 
-      // Update corners
+      // Update Corners
       cornerTL.textContent = s.corners[0];
       cornerTR.textContent = s.corners[1];
       cornerBL.textContent = s.corners[2];
       cornerBR.textContent = s.corners[3];
 
-      // Last slide logic
+      // Logic for Last Slide
       if (current === slides.length - 1) {
         nextButton.style.display = "block";
-        tapHint.textContent = "Ab last wali yaad hai… pasand aayi ho toh aage badhiye 💌";
-        tapHint.style.background = "#fff";
-        tapHint.style.color = "#ff2b7b";
+        if (tapHint) {
+          tapHint.textContent = "Ab last wali yaad hai… pasand aayi ho toh aage badhiye 💌";
+          tapHint.style.background = "#fff";
+          tapHint.style.color = "#ff2b7b";
+        }
       } else {
         nextButton.style.display = "none";
-        tapHint.textContent = "Photo pe tap karo malkin 😌✨";
+        if (tapHint) {
+          tapHint.textContent = "Photo pe tap karo malkin 😌✨";
+        }
       }
     }
 
-    // preload next image for smoother transition
-    function preload(idx) {
-      if (idx < 0 || idx >= slides.length) return;
-      const img = new Image();
-      img.src = slides[idx].src;
-    }
-
-    // init
+    // Initialize
     renderSlide();
-    preload(1);
 
-    // Click to advance
+    // Click Event
     photoFrame.addEventListener("click", () => {
       if (current < slides.length - 1) {
-        photoFrame.style.transform = "scale(0.96)";
+        // Simple animation effect logic
+        photoFrame.style.transform = "scale(0.95)";
         setTimeout(() => {
-          photoFrame.style.transform = "";
+          photoFrame.style.transform = "scale(1)";
           current++;
           renderSlide();
-          preload(current + 1);
         }, 150);
       }
     });
-
-    // Keyboard support (Enter/Space to advance, arrows to navigate)
-    photoFrame.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        photoFrame.click();
-      } else if (e.key === "ArrowRight") {
-        if (current < slides.length - 1) { current++; renderSlide(); preload(current + 1); }
-      } else if (e.key === "ArrowLeft") {
-        if (current > 0) { current--; renderSlide(); preload(current + 1); }
-      }
-    });
-
-    // IntersectionObserver to hide heart-orbit when out of view (save CPU)
-    const orbit = document.getElementById("heartOrbit");
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(en => {
-        if (!en.isIntersecting) orbit.style.visibility = "hidden";
-        else orbit.style.visibility = "visible";
-      });
-    }, { threshold: 0.25 });
-    observer.observe(photoFrame);
-
-    // Ensure no horizontal overflow after orientation change
-    window.addEventListener("resize", () => { document.documentElement.style.overflowX = "hidden"; });
-
-    // Respect prefers-reduced-motion
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.querySelectorAll('*').forEach(el => { el.style.animation = 'none'; el.style.transition = 'none'; });
-    }
   </script>
 </body>
 </html>

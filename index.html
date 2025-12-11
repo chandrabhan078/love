@@ -2,283 +2,215 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Oye Pgli – Name Page</title>
 
   <style>
-    :root{
-      --pink-1: #ffe6f3;
-      --pink-2: #ffb6e1;
-      --pink-3: #ff8ac5;
-      --accent: #ff5da8;
-      --accent-2: #ff2b85;
-      --card-bg: #fff;
-    }
-
+    /* --- RESET & BASE --- */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    html, body {
-      height: 100%;
+      font-family: "Poppins", sans-serif;
+      -webkit-tap-highlight-color: transparent; /* Remove blue tap box on mobile */
     }
 
     body {
       min-height: 100vh;
-      background: radial-gradient(circle at top, var(--pink-1) 0, var(--pink-2) 35%, var(--pink-3) 100%);
+      /* Better mobile height handling */
+      min-height: 100dvh; 
+      background: radial-gradient(circle at top, #ffe6f3 0, #ffb6e1 35%, #ff8ac5 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow: hidden; /* Prevent scrolling when elements move */
       position: relative;
-      padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
     }
 
-    /* BG EFFECTS (flowers + hearts) */
+    /* --- BACKGROUND ANIMATIONS --- */
     .bg-effects {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      overflow: hidden;
     }
     .bg-effects span {
       position: absolute;
-      font-size: clamp(14px, 4vw, 24px);
+      font-size: 24px;
       opacity: 0;
       animation-fill-mode: forwards;
-      will-change: transform, opacity;
-      user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
     }
 
     @keyframes floatUp {
       0% { transform: translateY(40px); opacity: 0; }
       20% { opacity: 1; }
-      100% { transform: translateY(-140vh); opacity: 0; }
+      100% { transform: translateY(-120vh); opacity: 0; }
+    }
+    @keyframes popSide {
+      0% { transform: translate(0, 0); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)); opacity: 0; }
     }
 
-    @keyframes popSideLeft {
-      0% { transform: translateX(-40px) translateY(0); opacity: 0; }
-      15% { opacity: 1; }
-      50% { transform: translateX(40vw) translateY(-20vh); }
-      100% { transform: translateX(80vw) translateY(40vh); opacity: 0; }
-    }
-
-    @keyframes popSideRight {
-      0% { transform: translateX(40px) translateY(0); opacity: 0; }
-      15% { opacity: 1; }
-      50% { transform: translateX(-40vw) translateY(-30vh); }
-      100% { transform: translateX(-80vw) translateY(40vh); opacity: 0; }
-    }
-
+    /* --- MAIN CARD --- */
     .wrapper {
-      text-align: center;
       position: relative;
-      z-index: 1;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
+      z-index: 10;
+      width: 90%;
+      max-width: 450px;
     }
 
     .card {
-      background: var(--card-bg);
-      padding: clamp(18px, 3.5vw, 40px);
-      border-radius: 24px;
-      box-shadow: 0 18px 46px rgba(0,0,0,0.14);
-      position: relative;
-      width: min(520px, 94vw);
-      max-width: 520px;
-      overflow: visible;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem 2rem;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      border: 2px solid #fff;
     }
 
-    /* BIG HEART (responsive) */
-    .big-heart-wrapper {
+    /* --- HEART SHAPE (Pure CSS) --- */
+    .heart-container {
       position: relative;
-      width: min(70vw, 280px);
-      height: calc(min(70vw, 280px) * 0.92);
-      margin: 0 auto 1.2rem;
+      width: 200px;
+      height: 180px;
+      margin: 0 auto 1.5rem;
+      /* Heart Beat Animation */
+      animation: heartBeat 1.5s infinite alternate;
     }
 
-    .heart-outer {
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+
+    .heart-bg {
       position: absolute;
-      inset: 0;
-      margin: auto;
-      width: 85%;
-      height: 80%;
+      width: 100%;
+      height: 100%;
+      background-color: #ff5da8;
+      border-radius: 50px; /* softer square */
       transform: rotate(-45deg);
-      background: var(--accent);
-      border-radius: 60px;
-      box-shadow:
-        0 16px 32px rgba(255, 60, 140, 0.45),
-        0 0 0 6px #ff85c4;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
     }
-
-    .heart-outer::before,
-    .heart-outer::after {
+    .heart-bg::before, .heart-bg::after {
       content: "";
       position: absolute;
       width: 100%;
       height: 100%;
-      background: var(--accent);
+      background-color: #ff5da8;
       border-radius: 50%;
     }
+    .heart-bg::before { top: -50%; left: 0; }
+    .heart-bg::after { top: 0; left: 50%; }
 
-    .heart-outer::before { top: -48%; left: 0; transform: translateY(-8%); }
-    .heart-outer::after  { left: 48%; top: 0; transform: translateX(0%); }
-
-    .heart-inner {
+    /* Text inside heart */
+    .heart-content {
       position: absolute;
       inset: 0;
-      margin: auto;
-      width: 76%;
-      height: 76%;
-      transform: rotate(45deg);
-      background: var(--card-bg);
-      border-radius: 50%;
-      box-shadow:
-        0 0 0 8px #ffe4f4,
-        0 0 0 14px var(--accent);
+      z-index: 2;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .heart-content h2 { font-size: 1.4rem; font-weight: 700; margin: 0; }
+    .heart-content h3 { font-size: 1.1rem; font-weight: 500; margin: 2px 0; }
+    .heart-content span { font-size: 1.8rem; margin-top: 5px; }
+
+    /* --- FLIRTY TEXT & INPUT AREA --- */
+    .flirty-text {
+      min-height: 2.5em; /* fixed height to prevent jumping */
+      margin-bottom: 1rem;
+      color: #ff2b85;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0.6rem;
-      text-align: center;
     }
 
-    .heart-top-text {
-      font-size: clamp(13px, 2.6vw, 18px);
-      font-weight: 600;
-      color: var(--accent-2);
-      margin-bottom: 0.15rem;
-    }
-    .heart-main-text {
-      font-size: clamp(16px, 3.6vw, 22px);
-      font-weight: 700;
-      color: #333;
-      margin-bottom: 0.06rem;
-    }
-    .heart-sub-text {
-      font-size: clamp(12px, 2.4vw, 16px);
-      font-weight: 500;
-      color: #444;
-      margin-bottom: 0.15rem;
-    }
-    .heart-emoji {
-      font-size: clamp(18px, 4vw, 28px);
-    }
-
-    .label-small {
-      margin-top: 0.4rem;
-      font-size: 0.95rem;
-      color: #555;
-    }
-
-    .flirty-text {
-      min-height: 1.2em;
-      margin-top: 0.6rem;
-      font-size: clamp(12px, 2.3vw, 15px);
-      color: var(--accent-2);
-      font-weight: 500;
-    }
-
-    .move-zone {
+    .move-area {
       position: relative;
-      width: min(88%, 270px);
-      height: 70px;
-      margin: 0.9rem auto 0.4rem;
-      background: #ffe6f5;
-      border-radius: 18px;
-      overflow: hidden;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 8px;
+      height: 60px; /* Space for the moving input */
+      width: 100%;
+      margin-bottom: 1rem;
     }
 
     .name-input {
-      padding: 12px 14px;
-      border-radius: 999px;
-      border: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: 2px solid #ff8ccc;
       outline: none;
-      width: 88%;
-      max-width: 420px;
-      font-size: clamp(14px, 2.4vw, 16px);
-      font-weight: 500;
-      background: #ffffff;
-      box-shadow: 0 0 0 2px #ff8ccc;
-      cursor: pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+      width: 80%;
+      max-width: 250px;
+      font-size: 1rem;
       text-align: center;
-      -webkit-appearance: none;
-      -moz-appearance: none;
+      transition: all 0.3s ease-out; /* Smooth movement */
+      box-shadow: 0 5px 15px rgba(255, 93, 168, 0.2);
     }
-
+    
     .name-input:focus {
-      box-shadow: 0 0 0 3px #ff5ca8, 0 10px 18px rgba(0,0,0,0.12);
-      transform: translateY(-2px);
+      border-color: #ff2b85;
+      box-shadow: 0 0 0 4px rgba(255, 43, 133, 0.1);
     }
 
     .hint {
-      margin-top: 0.35rem;
-      font-size: clamp(11px, 2vw, 13px);
+      font-size: 0.8rem;
       color: #777;
+      margin-top: 10px;
     }
 
-    /* smaller screens adjustments */
-    @media (max-width: 420px) {
-      .move-zone { height: 64px; border-radius: 14px; }
-      .card { padding: 14px; border-radius: 18px; box-shadow: 0 12px 30px rgba(0,0,0,0.12);}
-      .big-heart-wrapper { margin-bottom: 10px; }
-      .flirty-text { margin-top: 8px; }
+    /* --- MOBILE ADJUSTMENTS --- */
+    @media (max-width: 480px) {
+      .card { padding: 2rem 1.5rem; }
+      .heart-container { width: 160px; height: 140px; }
+      .heart-content h2 { font-size: 1.2rem; }
+      .heart-content h3 { font-size: 1rem; }
+      .flirty-text { font-size: 0.9rem; }
     }
-
-    /* prevent weird zoom on input on some mobile browsers */
-    input[type="text"] { font-size: 16px; }
-
   </style>
 </head>
 <body>
-  <!-- BG emoji effects -->
+
   <div class="bg-effects" id="bgEffects"></div>
 
   <div class="wrapper">
     <div class="card">
-      <div class="big-heart-wrapper" aria-hidden="true">
-        <div class="heart-outer"></div>
-        <div class="heart-inner">
-          <div class="heart-top-text">Oye pgli</div>
-          <div class="heart-main-text">apna naam</div>
-          <div class="heart-sub-text">daalna jra</div>
-          <div class="heart-emoji">💖</div>
+      
+      <div class="heart-container">
+        <div class="heart-bg"></div>
+        <div class="heart-content">
+          <h2>Oye Pgli</h2>
+          <h3>Apna Naam</h3>
+          <h3>Daalna Jra</h3>
+          <span>💖</span>
         </div>
       </div>
 
       <div class="flirty-text" id="flirtyText"></div>
 
-      <div class="move-zone">
-        <input
-          type="text"
-          id="nameInput"
-          class="name-input"
-          placeholder="Yahan naam likhna tha..."
+      <div class="move-area" id="moveArea">
+        <input 
+          type="text" 
+          id="nameInput" 
+          class="name-input" 
+          placeholder="Yahan naam likho..." 
           autocomplete="off"
-          inputmode="text"
         />
       </div>
 
       <p class="hint">
-       Naam likhne ke paise nahi lagte, bas thoda sa pyaar lagta hai 💖                                                                                           
+        Naam likhne ke paise nahi lagte, bas thoda sa pyaar lagta hai 😉
       </p>
+
     </div>
   </div>
 
@@ -286,135 +218,123 @@
     const input = document.getElementById("nameInput");
     const flirtyText = document.getElementById("flirtyText");
     const bgEffects = document.getElementById("bgEffects");
+    const moveArea = document.getElementById("moveArea");
 
-    const colors = ["#ffffff", "#ffe6ff", "#ffd1e8", "#ffe8cc", "#e5fffc"];
-    const positions = [
-      { top: 18, left: 20 },
-      { top: 65, left: 70 },
-      { top: 25, left: 75 },
-      { top: 70, left: 25 },
-      { top: 40, left: 10 }
-    ];
-
-    const flirtyLines = [
-      "Arey pgli, itna bhi kya sharmana? Naam toh bata de na… 😌❤️",
-      "Tu type karne aati hai, mera dil bhi tere saath hilne lagta hai 😚",
-      "Tera naam sunte hi dimag nahi, seedha dil active ho jata hai 💘",
-      "Tu bas naam likh de, baaki love story mai likh 😏",
-      "Itna mat sata na, pyaar se apna chhota sa naam likh de… 💖"
-    ];
-
-    const emojiSet = ["💖", "💘", "💕", "💗", "🌸", "💮", "🌹", "🌷", "💐"];
-
-    let moveCount = 0;
+    // Config
     const maxMoves = 5;
+    let moveCount = 0;
     let allowTyping = false;
 
-    function showFlirty(line) {
-      flirtyText.textContent = line;
+    // Messages
+    const lines = [
+      "Arey pgli, itna bhi kya sharmana? 😌❤️",
+      "Tu type karne aati hai, dil hilne lagta hai 😚",
+      "Haath pakadna hai, ya sirf naam likhna hai? 💘",
+      "Achha baba, ab nahi bhaagunga... try kar 😏",
+      "Jhooth bola tha 😂 Ab pakka last!"
+    ];
+
+    const emojis = ["💖", "💕", "🌸", "🙈", "😍", "✨"];
+
+    // 1. Function to move the input
+    function runAway() {
+      // Get container dimensions to keep input inside visible area if possible, 
+      // OR let it fly anywhere on screen for fun.
+      // Here we keep it mostly centered but chaotic.
+
+      const x = (Math.random() - 0.5) * 200; // -100 to 100px X
+      const y = (Math.random() - 0.5) * 300; // -150 to 150px Y
+      const rotate = (Math.random() - 0.5) * 20;
+
+      input.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rotate}deg)`;
+      
+      // Change color slightly
+      input.style.borderColor = Math.random() > 0.5 ? "#ff2b85" : "#a200ff";
+      input.style.backgroundColor = "#fff0f5";
     }
 
-    function moveInputOnce() {
-      // small random offsets for mobile-friendly positioning
-      const pos = positions[moveCount % positions.length];
-      // use percent positions but cap them so input stays visible on small screens
-      const top = Math.max(12, Math.min(78, pos.top));
-      const left = Math.max(12, Math.min(88, pos.left));
-      input.style.position = "relative";
-      input.style.top = top + "%";
-      input.style.left = left + "%";
-      input.style.transform =
-        "translate(-50%, -50%) rotate(" + (Math.random() * 10 - 5) + "deg)";
-
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      input.style.backgroundColor = color;
-      input.style.boxShadow =
-        "0 0 0 2px #ff5ca8, 0 12px 22px rgba(0,0,0,0.12)";
+    // 2. Background Emoji Pop
+    function spawnEmoji() {
+      const el = document.createElement("span");
+      el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      
+      // Random position
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.top = Math.random() * 100 + "vh";
+      
+      // Animation logic
+      el.style.animationName = "floatUp";
+      el.style.animationDuration = (3 + Math.random() * 2) + "s";
+      
+      bgEffects.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
     }
 
+    // 3. Reset Input State
     function resetInput() {
-      input.style.position = "";
-      input.style.top = "50%";
-      input.style.left = "50%";
-      input.style.transform = "translate(-50%, -50%)";
-      input.style.backgroundColor = "#ffffff";
-      input.style.boxShadow = "0 0 0 2px #ff8ccc";
-      input.placeholder = "Ab sach me apna naam likho…";
-      showFlirty(
-        "Achha baba sorry, ab pakka nahi bhaagunga. Likh de! 😘"
-      );
       allowTyping = true;
+      input.style.transform = "translate(-50%, -50%)"; // Center it back
+      input.style.borderColor = "#28a745"; // Green border signals "Go"
+      input.style.backgroundColor = "#fff";
+      input.placeholder = "Ab likh do Radha Rani ❤️";
+      flirtyText.innerText = "Le maan li haar, ab likh de 😘";
       input.focus();
-      input.style.cursor = "text";
     }
 
-    function spawnBgEmojis() {
-      const count = 3 + Math.floor(Math.random() * 3);
-      for (let i = 0; i < count; i++) {
-        const span = document.createElement("span");
-        span.textContent =
-          emojiSet[Math.floor(Math.random() * emojiSet.length)];
-
-        const side = Math.random();
-        if (side < 0.33) {
-          span.style.left = Math.random() * 100 + "vw";
-          span.style.bottom = "-40px";
-          span.style.animationName = "floatUp";
-        } else if (side < 0.66) {
-          span.style.left = "-40px";
-          span.style.top = Math.random() * 100 + "vh";
-          span.style.animationName = "popSideLeft";
-        } else {
-          span.style.right = "-40px";
-          span.style.top = Math.random() * 100 + "vh";
-          span.style.animationName = "popSideRight";
-        }
-
-        const duration = 4 + Math.random() * 3;
-        span.style.animationDuration = duration + "s";
-
-        bgEffects.appendChild(span);
-
-        setTimeout(() => span.remove(), duration * 1000 + 200);
-      }
-    }
-
-    function teaseHandler(e) {
+    // 4. Interaction Handler
+    function handleInteraction(e) {
       if (allowTyping) return;
 
-      // prevent mobile keyboard spam while teasing
-      if (e.type === "keydown" || e.type === "input") {
-        e.preventDefault();
-      }
-
+      // Agar user mobile pe tap kare, to keyboard mat khulne do jab tak moves bache hain
       if (moveCount < maxMoves) {
-        moveInputOnce();
-        showFlirty(flirtyLines[moveCount]);
-        spawnBgEmojis();
+        e.preventDefault(); // Stop focus
+        input.blur(); // Close keyboard on mobile force
+        
+        runAway();
+        spawnEmoji();
+        
+        // Show text
+        flirtyText.innerText = lines[moveCount % lines.length];
+        
         moveCount++;
 
         if (moveCount === maxMoves) {
-          setTimeout(resetInput, 350);
+          setTimeout(resetInput, 500);
         }
       }
     }
 
-    input.addEventListener("focus", teaseHandler);
-    input.addEventListener("touchstart", teaseHandler, { passive: true });
-    input.addEventListener("mousedown", teaseHandler);
-    input.addEventListener("keydown", teaseHandler);
-    input.addEventListener("input", teaseHandler);
-
-    // After teasing – allow typing & check Mikkuu
-    input.addEventListener("input", function (e) {
-      if (!allowTyping) return;
-      const value = e.target.value.trim().toLowerCase();
-      if (value === "mikkuu") {
-        // open love.html in same directory
-        window.location.href = "love.html";
+    // Listeners for both Desktop (mouseover) and Mobile (touchstart/click)
+    input.addEventListener("mouseover", function(e) {
+      // Only run on desktop via hover if not typing
+      if(!allowTyping && window.innerWidth > 768) {
+        handleInteraction(e);
       }
     });
+
+    // Mobile touch / Click
+    input.addEventListener("touchstart", handleInteraction); 
+    input.addEventListener("mousedown", handleInteraction);
+
+    // 5. Final Name Check
+    input.addEventListener("input", function(e) {
+      if (!allowTyping) return;
+
+      const val = e.target.value.toLowerCase().trim();
+      
+      // "mikkuu" check logic
+      if (val === "mikkuu") {
+        input.style.borderColor = "#ff0000";
+        flirtyText.innerText = "Haye main marjawa! ❤️ Redirecting...";
+        setTimeout(() => {
+          window.location.href = "love.html";
+        }, 1000);
+      }
+    });
+
+    // Initial Text
+    flirtyText.innerText = "Naam likhne ki koshish toh karo...";
+
   </script>
 </body>
 </html>
-
